@@ -12,21 +12,15 @@ const cli = meow(
   Options
   -o, --output          Output directory [require: true]
   -l, --locales         locales [require: true]
-  -f, --format          json | yaml [default: json]
   -d, --default-locale  default locale
-  --flat                json [default: true] | yaml [default: false]
-  --delimiter           json | yaml [default: .]
+  --descriptions        include descriptions in output [default: false]
   --module-name         module source name from where components are imported
 
   Example
   $ extract-messages --locales=ja,en --output app/translations 'app/**/*.js'
-  $ extract-messages -l=ja,en -o app/translations -f yaml 'app/**/messages.js'
 `,
   {
     flags: {
-      flat: {
-        type: 'boolean'
-      },
       output: {
         type: 'string',
         alias: 'o'
@@ -35,18 +29,12 @@ const cli = meow(
         type: 'string',
         alias: 'l'
       },
-      format: {
-        type: 'string',
-        alias: 'f',
-        default: 'json'
+      descriptions: {
+        type: 'boolean'
       },
       'default-locale': {
         type: 'string',
         alias: 'd'
-      },
-      delimiter: {
-        type: 'string',
-        default: '.'
       },
       'module-name': {
         type: 'string'

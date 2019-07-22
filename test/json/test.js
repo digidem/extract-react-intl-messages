@@ -13,6 +13,16 @@ test('export json', async t => {
   t.snapshot(ja)
 })
 
+test('export json with descriptions', async t => {
+  const tmp = tempy.directory()
+  const opts = { descriptions: true }
+  await m(['en', 'ja'], 'test/fixtures/default/**/*.js', tmp, opts)
+  const en = JSON.parse(fs.readFileSync(path.resolve(tmp, 'en.json'), 'utf8'))
+  const ja = JSON.parse(fs.readFileSync(path.resolve(tmp, 'ja.json'), 'utf8'))
+  t.snapshot(en)
+  t.snapshot(ja)
+})
+
 test('export json with removed messages', async t => {
   const tmp = tempy.directory()
   await m(['en', 'ja'], 'test/fixtures/default/**/*.js', tmp)
@@ -31,15 +41,6 @@ test('export json with removed messages', async t => {
   t.snapshot(ja)
 })
 
-test('export json - nest', async t => {
-  const tmp = tempy.directory()
-  await m(['en', 'ja'], 'test/fixtures/default/**/*.js', tmp, { flat: false })
-  const en = JSON.parse(fs.readFileSync(path.resolve(tmp, 'en.json'), 'utf8'))
-  const ja = JSON.parse(fs.readFileSync(path.resolve(tmp, 'ja.json'), 'utf8'))
-  t.snapshot(en)
-  t.snapshot(ja)
-})
-
 test('sort keys', async t => {
   const tmp = tempy.directory()
   const enPath = path.resolve(tmp, 'en.json')
@@ -51,18 +52,6 @@ test('sort keys', async t => {
 
   t.snapshot(Object.keys(en))
   t.snapshot(Object.keys(ja))
-})
-
-test('delimiter - nest', async t => {
-  const tmp = tempy.directory()
-  await m(['en', 'ja'], 'test/fixtures/default/**/*.js', tmp, {
-    flat: false,
-    delimiter: '_'
-  })
-  const en = JSON.parse(fs.readFileSync(path.resolve(tmp, 'en.json'), 'utf8'))
-  const ja = JSON.parse(fs.readFileSync(path.resolve(tmp, 'ja.json'), 'utf8'))
-  t.snapshot(en)
-  t.snapshot(ja)
 })
 
 test('export using custom module', async t => {

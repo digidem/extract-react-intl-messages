@@ -1,14 +1,13 @@
 {
-  "name": "extract-react-intl-messages",
+  "name": "@digidem/extract-react-intl-messages",
   "version": "1.0.2",
   "description": "Extract react-intl messages",
   "license": "MIT",
-  "repository": "akameco/extract-react-intl-messages",
-  "author": {
-    "name": "akameco",
-    "email": "akameco.t@gmail.com",
-    "url": "akameco.github.io"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digidem/extract-react-intl-messages.git"
   },
+  "author": "akameco <akameco.t@gmail.com> (akameco.github.io)",
   "engines": {
     "node": ">=8"
   },
@@ -36,22 +35,18 @@
     "messages"
   ],
   "dependencies": {
-    "extract-react-intl": "^0.9.0",
+    "@digidem/extract-react-intl": "^0.10.0",
     "flat": "^4.1.0",
-    "js-yaml": "^3.13.1",
-    "load-json-file": "^6.2.0",
-    "lodash.pick": "^4.4.0",
+    "lodash": "^4.17.15",
     "meow": "^5.0.0",
     "mkdirp": "^0.5.1",
-    "sort-keys": "^3.0.0",
-    "write-json-file": "^4.1.1"
+    "sort-keys": "^3.0.0"
   },
   "devDependencies": {
     "all-contributors-cli": "^6.7.0",
     "ava": "^2.2.0",
     "husky": "^3.0.0",
     "lint-staged": "^9.2.0",
-    "pify": "^4.0.1",
     "prettier": "^1.18.2",
     "react": "^16.8.6",
     "react-intl": "^2.9.0",
@@ -86,5 +81,14 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "bugs": {
+    "url": "https://github.com/digidem/extract-react-intl-messages/issues"
+  },
+  "homepage": "https://github.com/digidem/extract-react-intl-messages#readme",
+  "main": "index.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
   }
 }

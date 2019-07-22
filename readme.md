@@ -106,6 +106,7 @@ $ extract-messages --help
   Options
   -o, --output       Output directory [require: true]
   -l, --locales      locales [require: true]
+  --descriptions     include descriptions in output [default: false]
   --default-locale   default locale [default: en]
   --module-name      module source name from where components are imported [default: react-intl]
 
@@ -166,6 +167,39 @@ Type: `string`<br>
 Default: `react-intl`
 
 Set from where _defineMessages_, `<FormatterMessage />` and `<FormattedHTML />` are imported.
+
+#### descriptions
+
+Type: `boolean`<br> Default: `false`
+
+Includes message descriptions in the returned object. Each message id property
+will be an object with properties `message` and `description` instead of a
+message string e.g.
+
+```js
+{
+  en: {
+    'components/App/hello': {
+      message: 'hello',
+      description: 'hello message description'
+    },
+    'components/App/welcome': {
+      message: 'welcome to extract-react-intl',
+      description: 'welcome message description
+    }
+  },
+  ja: {
+    'components/App/hello': {
+      message: '',
+      description: 'hello message description'
+    },
+    'components/App/welcome': {
+      message: '',
+      description: 'welcome message description
+    }
+  }
+}
+```
 
 ## Contributors
 

@@ -2,26 +2,29 @@
 const path = require('path')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
-const pick = require('lodash.pick')
-const yaml = require('js-yaml')
-const pify = require('pify')
-const { flatten, unflatten } = require('flat')
-const loadJsonFile = require('load-json-file')
-const writeJsonFile = require('write-json-file')
-const extractReactIntl = require('extract-react-intl')
+const pick = require('lodash/pick')
+const merge = require('lodash/merge')
+const { unflatten } = require('flat')
+const extractReactIntl = require('@digidem/extract-react-intl')
 const sortKeys = require('sort-keys')
 
-const writeJson = (outputPath, obj) => {
-  return writeJsonFile(`${outputPath}.json`, obj, { indent: 2 })
+function loadJson(path) {
+  return JSON.parse(fs.readFileSync(path, 'utf-8'))
 }
 
-const writeYaml = (outputPath, obj) => {
-  return pify(fs.writeFile)(`${outputPath}.yml`, yaml.safeDump(obj), 'utf8')
+function writeJson(path, obj) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path, JSON.stringify(obj, null, 2), err => {
+      if (err) {
+        return reject(err)
+      }
+
+      resolve()
+    })
+  })
 }
 
-const isJson = ext => ext === 'json'
-
-function loadLocaleFiles(locales, buildDir, ext, delimiter) {
+function loadLocaleFiles(locales, buildDir) {
   const oldLocaleMaps = {}
 
   try {
@@ -29,10 +32,10 @@ function loadLocaleFiles(locales, buildDir, ext, delimiter) {
   } catch (error) {}
 
   for (const locale of locales) {
-    const file = path.resolve(buildDir, `${locale}.${ext}`)
+    const file = path.resolve(buildDir, `${locale}.json`)
     // Initialize json file
     try {
-      const output = isJson(ext) ? JSON.stringify({}) : yaml.safeDump({})
+      const output = JSON.stringify({})
       fs.writeFileSync(file, output, { flag: 'wx' })
     } catch (error) {
       if (error.code !== 'EEXIST') {
@@ -40,16 +43,12 @@ function loadLocaleFiles(locales, buildDir, ext, delimiter) {
       }
     }
 
-    let messages = isJson(ext)
-      ? loadJsonFile.sync(file)
-      : yaml.safeLoad(fs.readFileSync(file, 'utf8'), { json: true })
-
-    messages = flatten(messages, { delimiter })
+    const messages = loadJson(file)
 
     oldLocaleMaps[locale] = {}
     for (const messageKey of Object.keys(messages)) {
       const message = messages[messageKey]
-      if (message && typeof message === 'string' && message !== '') {
+      if (message && typeof message.message === 'string' && message !== '') {
         oldLocaleMaps[locale][messageKey] = messages[messageKey]
       }
     }
@@ -72,21 +71,15 @@ module.exports = async (locales, pattern, buildDir, opts) => {
   }
 
   const jsonOpts = { format: 'json', flat: true }
-  const yamlOpts = { format: 'yaml', flat: false }
-  const defautlOpts =
-    opts && opts.format && !isJson(opts.format) ? yamlOpts : jsonOpts
+  const defautlOpts = jsonOpts
 
   opts = { defaultLocale: 'en', ...defautlOpts, ...opts }
 
-  const ext = isJson(opts.format) ? 'json' : 'yml'
+  const { defaultLocale, descriptions, moduleName } = opts
 
-  const { defaultLocale, moduleName } = opts
+  const oldLocaleMaps = loadLocaleFiles(locales, buildDir)
 
-  const delimiter = opts.delimiter ? opts.delimiter : '.'
-
-  const oldLocaleMaps = loadLocaleFiles(locales, buildDir, ext, delimiter)
-
-  const extractorOptions = { defaultLocale }
+  const extractorOptions = { defaultLocale, descriptions }
 
   if (moduleName) {
     extractorOptions.moduleSourceName = moduleName
@@ -104,18 +97,19 @@ module.exports = async (locales, pattern, buildDir, opts) => {
       let localeMap =
         locale === defaultLocale
           ? // Create a clone so we can use only current valid messages below
-            { ...oldLocaleMaps[locale], ...newLocaleMaps[locale] }
-          : { ...newLocaleMaps[locale], ...oldLocaleMaps[locale] }
+            merge(oldLocaleMaps[locale], newLocaleMaps[locale])
+          : merge(newLocaleMaps[locale], oldLocaleMaps[locale])
       // Only keep existing keys
       localeMap = pick(localeMap, Object.keys(newLocaleMaps[locale]))
 
       const fomattedLocaleMap = opts.flat
         ? sortKeys(localeMap, { deep: true })
-        : unflatten(sortKeys(localeMap), { delimiter, object: true })
+        : unflatten(sortKeys(localeMap), { object: true })
 
-      const fn = isJson(opts.format) ? writeJson : writeYaml
-
-      return fn(path.resolve(buildDir, locale), fomattedLocaleMap)
+      return writeJson(
+        path.resolve(buildDir, locale) + '.json',
+        fomattedLocaleMap
+      )
     })
   )
 }
