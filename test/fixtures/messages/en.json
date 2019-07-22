@@ -1,0 +1,18 @@
+{
+  "a.hello": {
+    "description": "a hello description",
+    "message": "hello"
+  },
+  "a.world": {
+    "description": "a world description",
+    "message": "world"
+  },
+  "b.hello": {
+    "description": "b hello description",
+    "message": "hello"
+  },
+  "b.world": {
+    "description": "b world description",
+    "message": "world"
+  }
+}

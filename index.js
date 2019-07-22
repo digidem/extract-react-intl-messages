@@ -97,8 +97,8 @@ module.exports = async (locales, pattern, buildDir, opts) => {
       let localeMap =
         locale === defaultLocale
           ? // Create a clone so we can use only current valid messages below
-            merge(oldLocaleMaps[locale], newLocaleMaps[locale])
-          : merge(newLocaleMaps[locale], oldLocaleMaps[locale])
+            merge({}, oldLocaleMaps[locale], newLocaleMaps[locale])
+          : merge({}, newLocaleMaps[locale], oldLocaleMaps[locale])
       // Only keep existing keys
       localeMap = pick(localeMap, Object.keys(newLocaleMaps[locale]))
 

@@ -1,0 +1,18 @@
+{
+  "a.hello": {
+    "description": "a hello description",
+    "message": "こんにちは"
+  },
+  "a.world": {
+    "description": "a world description",
+    "message": ""
+  },
+  "b.hello": {
+    "description": "b hello description",
+    "message": ""
+  },
+  "b.world": {
+    "description": "b world description",
+    "message": "こんにちは"
+  }
+}
