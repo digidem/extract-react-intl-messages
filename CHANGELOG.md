@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/digidem/extract-react-intl-messages/compare/v2.0.1...v2.0.2) (2019-07-22)
+
+### Bug Fixes
+
+- remove unused messages on update ([53f4598](https://github.com/digidem/extract-react-intl-messages/commit/53f4598))
+
 ### [2.0.1](https://github.com/digidem/extract-react-intl-messages/compare/v2.0.0...v2.0.1) (2019-07-22)
 
 ### Bug Fixes
