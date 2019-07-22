@@ -4,21 +4,37 @@
 [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](https://github.com/facebook/jest)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![MIT License](https://img.shields.io/npm/l/nps.svg?style=flat-square)](./license)
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors)
 
-This package will generate json or yaml files from a glob. It will generate one file per locale, with the ids of each message defined by the [`defineMessages`](https://github.com/yahoo/react-intl/wiki/API#definemessages) function of [react-intl](https://github.com/yahoo/react-intl). The value of each of these keys will be an empty string, except for your `defaultLocale` which will be populated with the [`defaultMessage`](https://github.com/yahoo/react-intl/wiki/API#message-descriptor).
+This is forked from
+[extract-react-intl-messages](https://github.com/akameco/extract-react-intl-messages).
+It removes un-used options (custom delimiter, exporting nested files, and yaml
+export), and adds an option to export messages in the same format that [Chrome
+Apps use](https://developer.chrome.com/webstore/i18n). We use this because the
+translation service we use, crowdin.com, accepts this format of file, and will
+include the description as context for the translator.
+
+This package will generate json from a glob. It will generate one file per
+locale, with the ids of each message defined by the
+[`defineMessages`](https://github.com/yahoo/react-intl/wiki/API#definemessages)
+function of [react-intl](https://github.com/yahoo/react-intl). The value of each
+of these keys will be an empty string, or an object with the property `message`
+an empty string, except for your `defaultLocale` which will be populated with
+the
+[`defaultMessage`](https://github.com/yahoo/react-intl/wiki/API#message-descriptor).
 
 ## Dependencies
 
 ### Babel
 
+- 2.x works with Babel 7
 - 1.x works with Babel 7
 - 0.x works with Babel 6
 
 ## Install
 
-```
-$ npm install --save-dev extract-react-intl-messages
+```sh
+$ npm install --save-dev @digidem/extract-react-intl-messages
 ```
 
 ## Usage
@@ -43,7 +59,7 @@ export default defineMessages({
 ### Run Script
 
 ```
-$ extract-messages -l=en,ja -o app/translations -d en --flat false 'app/**/!(*.test).js'
+$ extract-messages -l=en,ja -o app/translations -d en 'app/**/!(*.test).js'
 ```
 
 ### Output
@@ -52,13 +68,10 @@ app/translations/en.json
 
 ```json
 {
-  "a": {
-    "hello": "hello",
-    "world": "world"
-  },
-  "b": {
-    "hello": "hello",
-    "world": "world"
+  "a.hello": "hello",
+  "a.world": "world",
+  "b.hello": "hello",
+  "b.world": "world"
   }
 }
 ```
@@ -67,13 +80,10 @@ app/translations/ja.json
 
 ```json
 {
-  "a": {
-    "hello": "",
-    "world": ""
-  },
-  "b": {
-    "hello": "",
-    "world": ""
+  "a.hello": "",
+  "a.world": "",
+  "b.hello": "",
+  "b.world": ""
   }
 }
 ```
@@ -96,16 +106,12 @@ $ extract-messages --help
   Options
   -o, --output       Output directory [require: true]
   -l, --locales      locales [require: true]
-  -f, --format       json|yaml [default: json]
-  --flat             json [default: true] | yaml [default: false]
   --default-locale   default locale [default: en]
-  --delimiter        json | yaml [default: .]
   --module-name      module source name from where components are imported [default: react-intl]
 
   Example
   $ extract-messages --locales=ja,en --output app/translations 'app/**/*.js'
   $ extract-messages -l=ja,en -o i18n 'src/**/*.js'
-  $ extract-messages -l=ja,en -o app/translations -f yaml 'app/**/messages.js'
 ```
 
 ### create-react-app user
@@ -154,23 +160,6 @@ Export directory.
 Type: `string`<br>
 Default: `en`
 
-##### format
-
-Type: `json` | `yaml`<br>
-Default: `json`
-
-Set extension to output.
-
-##### flat
-
-Type: `boolean`<br>
-Default: `true`
-
-If format is `yaml`, set to `false`.
-
-Be careful if `false`.
-See [this issue](https://github.com/akameco/extract-react-intl-messages/issues/3).
-
 ##### moduleName
 
 Type: `string`<br>
@@ -193,6 +182,9 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
     <td align="center"><a href="http://stefan-gojan.de"><img src="https://avatars2.githubusercontent.com/u/163128?v=4" width="100px;" alt="Stefan Gojan"/><br /><sub><b>Stefan Gojan</b></sub></a><br /><a href="https://github.com/akameco/extract-react-intl-messages/issues?q=author%3Ahoschi" title="Bug reports">🐛</a> <a href="https://github.com/akameco/extract-react-intl-messages/commits?author=hoschi" title="Code">💻</a> <a href="https://github.com/akameco/extract-react-intl-messages/commits?author=hoschi" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://lithe.net"><img src="https://avatars1.githubusercontent.com/u/857744?v=4" width="100px;" alt="Solomon English"/><br /><sub><b>Solomon English</b></sub></a><br /><a href="https://github.com/akameco/extract-react-intl-messages/commits?author=solomon23" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Filson14"><img src="https://avatars1.githubusercontent.com/u/4540538?v=4" width="100px;" alt="Filip "Filson" Pasternak"/><br /><sub><b>Filip "Filson" Pasternak</b></sub></a><br /><a href="https://github.com/akameco/extract-react-intl-messages/commits?author=Filson14" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="http://ddem.us/"><img src="https://avatars1.githubusercontent.com/u/290457?v=4" width="100px;" alt="Gregor MacLennan"/><br /><sub><b>Gregor MacLennan</b></sub></a><br /><a href="https://github.com/akameco/extract-react-intl-messages/commits?author=gmaclennan" title="Code">💻</a> <a href="https://github.com/akameco/extract-react-intl-messages/commits?author=gmaclennan" title="Documentation">📖</a> <a href="https://github.com/akameco/extract-react-intl-messages/commits?author=gmaclennan" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
