@@ -14,7 +14,7 @@ function loadJson(path) {
 
 function writeJson(path, obj) {
   return new Promise((resolve, reject) => {
-    fs.writeFile(path, JSON.stringify(obj, null, 2), err => {
+    fs.writeFile(path, JSON.stringify(obj, null, 2) + '\n', err => {
       if (err) {
         return reject(err)
       }
